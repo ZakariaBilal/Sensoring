@@ -1,0 +1,40 @@
+{
+  "name": "nodejs",
+  "author": "test",
+  "main": "server.js",
+  "dependencies": {
+    "async": "*",
+    "await-to-js": "*",
+    "body-parser": "*",
+    "compression": "^1.7.4",
+    "connect-timeout": "^1.9.0",
+    "cors": "^2.8.5",
+    "express": "*",
+    "helmet": "*",
+    "jsonwebtoken": "*",
+    "method-override": "*",
+    "moment": "*",
+    "mongo-sanitize": "*",
+    "mongodb": "*",
+    "mongoose": "*",
+    "mongoose-gridfs": "*",
+    "mongoose-paginate": "*",
+    "morgan": "*",
+    "multer": "*",
+    "node-cron": "*",
+    "pngquant-bin": "*",
+    "request": "*",
+    "request-promise": "*",
+    "underscore": "*"
+  },
+  "devDependencies": {
+    "david": "^12.0.0",
+    "nodemon": "^2.0.3"
+  },
+  "scripts": {
+    "check-outdated": "npm outdated && david",
+    "update-outdated": "npm update && david update",
+    "start": "nodemon --max-old-space-size=4096 server.js",
+    "debug": "ndb ./server.js"
+  }
+}

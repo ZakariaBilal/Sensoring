@@ -1,0 +1,39 @@
+{
+  "superAdmin": {
+    "firstName": "super",
+    "familyName": "admin",
+    "email": "admin",
+    "password": "admin",
+    "isSuperAdmin": true,
+    "type": "Admin"
+  },
+  "server": {
+    "node": {
+      "port": 3500,
+      "oldFile": "server.js",
+      "newFile": "server.js"
+    }
+  },
+  "app": {
+    "url": "http://localhost:2000/"
+  },
+  "seed": false,
+  "unitTest": false,
+  "jwt": {
+    "secretOrPublicKey": "#mySecretKey$",
+    "algorithm": "HS512",
+    "expiresIn": 14400
+  },
+  "security": {
+    "password": {
+      "minLength": 10,
+      "minCapital": 1,
+      "minSpecialChar": 1,
+      "minDigits": 2
+    }
+  },
+  "scoping": {},
+  "cryptSecret": {
+    "key": "sensorting"
+  }
+}
