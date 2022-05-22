@@ -91,7 +91,7 @@ const experimentSlice = createSlice({
         },
         deleteExperimentSuccess(state, action) {
             state.loader = false;
-            state.experiment = action.payload
+            state.experiments = state.experiments.filter((experiment) => (experiment._id != action.payload._id));
         },
         deleteExperimentFailure(state) {
             state.loader = false;

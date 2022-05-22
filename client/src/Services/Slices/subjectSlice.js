@@ -66,7 +66,7 @@ const SubjectSlice = createSlice({
         },
         deleteSubjectSuccess(state, action) {
             state.loader = false;
-            state.subject = action.payload
+            state.subjects = state.subjects.filter((subject) => (subject._id != action.payload._id));
         },
         deleteSubjectFailure(state) {
             state.loader = false;

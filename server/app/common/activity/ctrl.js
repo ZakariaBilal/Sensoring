@@ -3,7 +3,7 @@ let mongoose = require("mongoose"),
   Activity = mongoose.model("Activity");
 
 module.exports.findAll = () => {
-  return dao.find();
+  return dao.find({}, null, "type");
 };
 
 module.exports.findById = id => {

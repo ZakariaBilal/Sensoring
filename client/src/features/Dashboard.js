@@ -14,7 +14,7 @@ function Dashboard() {
 
   return (
 
-    <header className="App-header">
+    <header>
       <Row style={{ width: '75%' }} justify="space-evenly" align="middle" gutter={20}>
         {entities.map(({ name, path, id }) => (
           <Col span={12} key={id} >
