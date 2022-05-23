@@ -4,6 +4,7 @@ import experimentSaga from 'Services/APIS/experimentAPI';
 import subjectSaga from 'Services/APIS/subjectAPI';
 import activitySaga from 'Services/APIS/activityAPI';
 import activityTypeSaga from 'Services/APIS/activityTypeAPI';
+import experimentDataSaga from 'Services/APIS/experimentDataAPI';
 
 // Here you can include all the saga which you write for components
 export default function* rootSaga() {
@@ -13,7 +14,7 @@ export default function* rootSaga() {
     subjectSaga(),
     activitySaga(),
     activityTypeSaga(),
-
+    experimentDataSaga(),
 
   ]);
 }

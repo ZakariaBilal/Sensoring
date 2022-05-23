@@ -6,16 +6,24 @@ import {
     startGetExperimentPopulate, setActivityEnded,
     setExperimentEnded,
 } from '../Services/Slices/experimentSlice'
+import {
+    startInsertExperimentData
+} from '../Services/Slices/experimentDataSlice'
 import { Accelerometer, Gyroscope, AbsoluteOrientationSensor } from 'motion-sensors-polyfill'
 import SubjectForm from "./OnBoarding/SubjectForm";
 import Timer from "./OnBoarding/Timer";
 
 
 function StartExperiment() {
+
+    const dispatch = useDispatch();
+
     const experimentLoader = useSelector(state => state.experiment.loader);
     const experiment = useSelector(state => state.experiment.currentExperiment);
     const currentExperimentId = useSelector(state => state.experiment.currentExperimentId);
     const subject = useSelector(state => state.subject.subject);
+
+
     const [experimentEnded, setExperimentEnded] = useState(false);
     const [startActivity, setStartActivity] = useState(false);
     const [activityIndex, setActivityIndex] = useState(-1);
@@ -28,116 +36,70 @@ function StartExperiment() {
     const [accelerometerIndex, setAccelerometerIndex] = useState(null);
     const [gyroscopeIndex, setGyroscopeIndex] = useState(null);
     const [absoluteOrientationSensorIndex, setAbsoluteOrientationSensorIndex] = useState(null);
-    const [accelerometerData, setAccelerometerData] = useState({});
-    const [gyroscopeData, setGyroscopeData] = useState({});
-    const [absoluteOrientationSensorData, setAbsoluteOrientationSensorData] = useState({});
+    const [accelerometerData, setAccelerometerData] = useState(null);
+    const [gyroscopeData, setGyroscopeData] = useState(null);
+    const [absoluteOrientationSensorData, setAbsoluteOrientationSensorData] = useState(null);
+    const [touchStartData, setTouchStartData] = useState(null);
+    const [touchMoveData, setTouchMoveData] = useState(null);
+    const [touchEndData, setTouchEndData] = useState(null);
 
-    const [touchStartData, setTouchStartData] = useState({});
-    const [touchMoveData, setTouchMoveData] = useState({});
-    const [touchEndData, setTouchEndData] = useState({});
-
-    const handleTouchStart = (e) => {
-        let copyExperimentData = touchStartData;
-        if (!copyExperimentData.data) {
-            copyExperimentData.data = [];
+    const createDataObject = (sensorData) => {
+        let copyExperimentData = sensorData;
+        if (!copyExperimentData) {
+            copyExperimentData = [];
             for (let index = 0; index < experiment.activities.length; index++) {
-                copyExperimentData.data.push([]);
-                for (let j = 0; j < experiment.sensors.length; j++) {
-                    copyExperimentData.data[index].push([]);
-                }
+                copyExperimentData.push([]);
             }
         }
-        copyExperimentData.data[activityIndex].push(...e.changedTouches);
+        return copyExperimentData
+    }
+    const handleTouchStart = (e) => {
+        let copyExperimentData = createDataObject(touchStartData);
+        copyExperimentData[activityIndex].push(e.changedTouches.map(touch => ({ ...touch, type: 'touchStart' })));
         setTouchStartData(copyExperimentData);
     }
 
     const handleTouchMove = (e) => {
-        let copyExperimentData = touchMoveData;
-        if (!copyExperimentData.data) {
-            copyExperimentData.data = [];
-            for (let index = 0; index < experiment.activities.length; index++) {
-                copyExperimentData.data.push([]);
-            }
-        }
-
-        copyExperimentData.data[activityIndex].push(...e.changedTouches);
+        let copyExperimentData = createDataObject(touchMoveData);
+        copyExperimentData[activityIndex].push(e.changedTouches.map(touch => ({ ...touch, type: 'touchMove' })));
         setTouchMoveData(copyExperimentData);
     }
 
     const handleTouchEnd = (e) => {
-        let copyExperimentData = touchEndData;
-        if (!copyExperimentData.data) {
-            copyExperimentData.data = [];
-            for (let index = 0; index < experiment.activities.length; index++) {
-                copyExperimentData.data.push([]);
-            }
-        }
-
-        copyExperimentData.data[activityIndex].push(...e.changedTouches);
+        let copyExperimentData = createDataObject(touchEndData);
+        copyExperimentData[activityIndex].push(e.changedTouches.map(touch => ({ ...touch, type: 'touchEnd' })));
         setTouchEndData(copyExperimentData);
     }
+
     const handleAbsoluteOrientationSensor = (e) => {
-        let copyExperimentData = absoluteOrientationSensorData;
-        if (!copyExperimentData.data) {
-            copyExperimentData.data = [];
-            for (let index = 0; index < experiment.activities.length; index++) {
-                copyExperimentData.data.push([]);
-                for (let j = 0; j < experiment.sensors.length; j++) {
-                    copyExperimentData.data[index].push([]);
-                }
-            }
-
-            copyExperimentData.data[activityIndex][absoluteOrientationSensorIndex].push({ timestamp: absoluteOrientationSensor.timestamp });
-
-            setAbsoluteOrientationSensorData(copyExperimentData);
-        }
-        copyExperimentData.data[activityIndex][absoluteOrientationSensorIndex].push({ timestamp: absoluteOrientationSensor.timestamp });
-
+        let copyExperimentData = createDataObject(absoluteOrientationSensorData);
+        copyExperimentData[activityIndex].push({ timestamp: absoluteOrientationSensor.timestamp });
         setAbsoluteOrientationSensorData(copyExperimentData);
     }
+
     const handleAccelerometer = (e) => {
-        let copyExperimentData = accelerometerData;
-        if (!copyExperimentData.data) {
-            copyExperimentData.data = [];
-            for (let index = 0; index < experiment.activities.length; index++) {
-                copyExperimentData.data.push([]);
-                for (let j = 0; j < experiment.sensors.length; j++) {
-                    copyExperimentData.data[index].push([]);
-
-                }
-
-            }
-        }
-
-        copyExperimentData[activityIndex][accelerometerIndex].push({ timestamp: accelerometer.timestamp });
+        let copyExperimentData = createDataObject(accelerometerData);
+        copyExperimentData[activityIndex].push({ timestamp: accelerometer.timestamp });
         setAccelerometerData(copyExperimentData);
 
     }
     const handleGyroscope = (e) => {
-        let copyExperimentData = gyroscopeData;
-        if (!copyExperimentData.data) {
-            copyExperimentData.data = [];
-            for (let index = 0; index < experiment.activities.length; index++) {
-                copyExperimentData.data.push([]);
-                for (let j = 0; j < experiment.sensors.length; j++) {
-                    copyExperimentData.data[index].push([]);
-                }
-            }
-        }
-        copyExperimentData[activityIndex][accelerometerIndex].push({ timestamp: gyroscope.timestamp });
+        let copyExperimentData = createDataObject(gyroscopeData);
+        copyExperimentData[activityIndex].push({ timestamp: gyroscope.timestamp });
         setGyroscopeData(copyExperimentData);
     }
-    const dispatch = useDispatch();
 
+    //fetching the Experiment
     useEffect(() => {
         if (currentExperimentId) dispatch(startGetExperimentPopulate(currentExperimentId));
     }, []);
 
+    //Setup of the subject after getting it
     useEffect(() => {
         if (subject?._id) setExperimentData({ ...experimentData, subject: subject._id });
     }, [subject]);
 
-
+    //Activity start cycle between off and on
     useEffect(() => {
         console.log("start Actvity", startActivity)
         if (startActivity) {
@@ -191,6 +153,7 @@ function StartExperiment() {
         }
     }, [startActivity]);
 
+    //Getting the experiment and setup of it
     useEffect(() => {
         if (experiment?.sensors && currentExperimentId == experiment._id) {
             setExperimentData({ ...experimentData, experiment: experiment._id });
@@ -216,6 +179,26 @@ function StartExperiment() {
             }
         }
     }, [experiment]);
+
+    //building and committing the experiment Data
+    useEffect(() => {
+        if (experimentEnded) {
+            let data = { data: [], touchData: [] }
+            for (let activityIndex = 0; activityIndex < experiment.activities.length; activityIndex++) {
+                data.touchData.push([...touchStartData[activityIndex], ...touchMoveData[activityIndex], ...touchEndData[activityIndex]]);
+                let sensorData = [];
+                for (let sensorIndex = 0; sensorIndex < experiment.sensors.length; sensorIndex++) {
+                    if (sensorIndex == accelerometerIndex) sensorData.push([...accelerometerData[activityIndex]]);
+                    if (sensorIndex == absoluteOrientationSensorIndex) sensorData.push([...absoluteOrientationSensorData[activityIndex]]);
+                    if (sensorIndex == gyroscopeIndex) sensorData.push([...gyroscopeData[activityIndex]]);
+                }
+                data.data.push(sensorData);
+            }
+            setExperimentData({ ...experimentData, ...data });
+
+            dispatch(startInsertExperimentData(experimentData))
+        }
+    }, [experimentEnded]);
 
 
     return (
