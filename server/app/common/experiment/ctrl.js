@@ -3,7 +3,7 @@ let mongoose = require("mongoose"),
   Experiment = mongoose.model("Experiment");
 
 module.exports.findAll = () => {
-  return dao.find();
+  return dao.find(null, null, [{ path: "sensors" }, { path: "activities", populate: "type" }]);
 };
 
 module.exports.findById = id => {

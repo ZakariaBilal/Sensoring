@@ -65,7 +65,7 @@ function* createExperiment(action) {
 function* updateExperiment(action) {
     try {
         console.log('update Experiment', action)
-        const response = yield call(() => putRequest('experiment/' + action.payload._id, action.payload));
+        const response = yield call(() => putRequest('experiment/' + (action.payload._id || action.payload), action.payload));
         yield put(updateExperimentSuccess(response.data));
     } catch (e) {
         console.error(e);
@@ -76,7 +76,7 @@ function* updateExperiment(action) {
 function* deleteExperiment(action) {
     try {
         console.log('delete Experiment', action)
-        const response = yield call(() => deleteRequest('experiment/' + action.payload._id));
+        const response = yield call(() => deleteRequest('experiment/' + (action.payload._id || action.payload)));
         yield put(deleteExperimentSuccess(response.data));
     } catch (e) {
         console.error(e);

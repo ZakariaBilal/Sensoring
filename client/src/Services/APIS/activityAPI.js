@@ -52,7 +52,7 @@ function* createActivity(action) {
 function* updateActivity(action) {
     try {
         console.log('update Activity', action)
-        const response = yield call(() => putRequest('Activity/' + action.payload._id, action.payload));
+        const response = yield call(() => putRequest('Activity/' + (action.payload._id || action.payload), action.payload));
         yield put(updateActivitySuccess(response.data));
     } catch (e) {
         console.error(e);

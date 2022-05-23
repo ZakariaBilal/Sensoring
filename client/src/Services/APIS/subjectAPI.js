@@ -52,7 +52,7 @@ function* createSubject(action) {
 function* updateSubject(action) {
     try {
         console.log('update Subject', action)
-        const response = yield call(() => putRequest('Subject/' + action.payload._id, action.payload));
+        const response = yield call(() => putRequest('Subject/' + (action.payload._id || action.payload), action.payload));
         yield put(updateSubjectSuccess(response.data));
     } catch (e) {
         console.error(e);
@@ -63,7 +63,7 @@ function* updateSubject(action) {
 function* deleteSubject(action) {
     try {
         console.log('delete Subject', action)
-        const response = yield call(() => deleteRequest('Subject/' + action.payload._id));
+        const response = yield call(() => deleteRequest('Subject/' + (action.payload._id || action.payload)));
         yield put(deleteSubjectSuccess(response.data));
     } catch (e) {
         console.error(e);

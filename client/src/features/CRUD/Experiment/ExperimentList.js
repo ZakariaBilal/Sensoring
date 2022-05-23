@@ -2,13 +2,14 @@ import { Table, Tag, Space, Button, Row, Col, Modal } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { startGetActivities, startDeleteActivity, startGetActivity } from '../../../Services/Slices/activitySlice'
+// import { startGetActivities, startDeleteActivity, startGetActivity } from '../../../Services/Slices/activitySlice'
+import { startGetExperiments, startDeleteExperiment, startGetExperiment } from '../../../Services/Slices/experimentSlice'
 import React, { useEffect, useState } from 'react';
 
 
 function ActivityList() {
     const loader = useSelector(state => state.activity.loader);
-    const activities = useSelector(state => state.activity.activities);
+    const experiments = useSelector(state => state.experiment.experiments);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [activityId, setActivityId] = useState(null);
 
@@ -18,7 +19,7 @@ function ActivityList() {
     };
 
     const handleOk = () => {
-        dispatch(startDeleteActivity(activityId));
+        dispatch(startDeleteExperiment(activityId));
         setIsModalVisible(false);
     };
 
@@ -27,7 +28,7 @@ function ActivityList() {
     };
 
     useEffect(() => {
-        dispatch(startGetActivities());
+        dispatch(startGetExperiments());
     }, []);
 
     const dispatch = useDispatch();
@@ -38,20 +39,32 @@ function ActivityList() {
             key: 'name',
         },
         {
-            title: 'Type',
-            dataIndex: 'type',
-            key: 'type',
-            render: (type) => (
+            title: 'Sensors',
+            key: 'sensors',
+            dataIndex: 'sensors',
+            render: (sensors) => (
                 <>
-                    {type?.name}
+                    {sensors.map((sensor) => (
+                        <Tag color="blue" key={sensors._id}>
+                            {sensor.name}
+                        </Tag>
+                    ))}
                 </>
-            )
-            ,
+            ),
         },
         {
-            title: 'Time Required',
-            dataIndex: 'timeRequired',
-            key: 'timeRequired',
+            title: 'Activities',
+            key: 'activities',
+            dataIndex: 'activities',
+            render: (activities) => (
+                <>
+                    {activities.map((activity) => (
+                        <Tag color="blue" key={activity._id}>
+                            {activity.name}
+                        </Tag>
+                    ))}
+                </>
+            ),
         },
         {
             title: 'Action',
@@ -79,10 +92,10 @@ function ActivityList() {
                 </Button>
             </Col>
             <Col span={24} >
-                <Table columns={columns} dataSource={activities} rowKey={record => record._id} />
+                <Table columns={columns} dataSource={experiments} rowKey={record => record._id} />
             </Col>
             <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                <p>Please confirm the deletion of the activity</p>
+                <p>Please confirm the deletion of the experiment</p>
             </Modal>
         </Row>
 

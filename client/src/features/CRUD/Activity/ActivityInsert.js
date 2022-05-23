@@ -50,8 +50,8 @@ function ActivityInsert() {
                     ]}
                 >
                     <Select size="large"
-                        placeholder="Name"
-                        autoComplete="Name"
+                        placeholder="Type"
+                        autoComplete="Type"
                     >
                         {activityTypes?.map((type) => (
                             <Option value={type._id} key={type._id}>{type.name}</Option>
@@ -70,7 +70,7 @@ function ActivityInsert() {
                         },
                     ]}
                 >
-                    <InputNumber size="large"
+                    <InputNumber size="large" style={{ width: "100%" }}
                         placeholder="Time Required"
                         min={1}
                     />

@@ -52,7 +52,7 @@ function* createActivityType(action) {
 function* updateActivityType(action) {
     try {
         console.log('update ActivityType', action)
-        const response = yield call(() => putRequest('ActivityType/' + action.payload._id, action.payload));
+        const response = yield call(() => putRequest('ActivityType/' + (action.payload._id || action.payload), action.payload));
         yield put(updateActivityTypeSuccess(response.data));
     } catch (e) {
         console.error(e);
@@ -63,7 +63,7 @@ function* updateActivityType(action) {
 function* deleteActivityType(action) {
     try {
         console.log('delete ActivityType', action)
-        const response = yield call(() => deleteRequest('ActivityType/' + action.payload._id));
+        const response = yield call(() => deleteRequest('ActivityType/' + (action.payload._id || action.payload)));
         yield put(deleteActivityTypeSuccess(response.data));
     } catch (e) {
         console.error(e);

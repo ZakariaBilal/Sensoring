@@ -41,6 +41,21 @@ const routes = [
     element: lazy(() => import('features/CRUD/Activity/ActivityUpdate')),
     exact: true,
   },
+  {
+    path: '/dashboard/experiments',
+    element: lazy(() => import('features/CRUD/Experiment/ExperimentList')),
+    exact: true,
+  },
+  {
+    path: '/dashboard/experiments/insert',
+    element: lazy(() => import('features/CRUD/Experiment/ExperimentInsert')),
+    exact: true,
+  },
+  {
+    path: '/dashboard/experiments/update',
+    element: lazy(() => import('features/CRUD/Experiment/ExperimentUpdate')),
+    exact: true,
+  },
 ];
 
 export default routes;

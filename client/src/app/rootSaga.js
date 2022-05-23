@@ -2,6 +2,7 @@ import { all } from 'redux-saga/effects';
 import authenticateSaga from 'Services/APIS/authenticateAPI';
 import experimentSaga from 'Services/APIS/experimentAPI';
 import subjectSaga from 'Services/APIS/subjectAPI';
+import sensorSaga from 'Services/APIS/sensorAPI';
 import activitySaga from 'Services/APIS/activityAPI';
 import activityTypeSaga from 'Services/APIS/activityTypeAPI';
 import experimentDataSaga from 'Services/APIS/experimentDataAPI';
@@ -15,6 +16,7 @@ export default function* rootSaga() {
     activitySaga(),
     activityTypeSaga(),
     experimentDataSaga(),
+    sensorSaga(),
 
   ]);
 }
