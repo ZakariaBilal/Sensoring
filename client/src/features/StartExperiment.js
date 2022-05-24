@@ -73,6 +73,7 @@ function StartExperiment() {
 
     const handleAbsoluteOrientationSensor = (e) => {
         let copyExperimentData = createDataObject(absoluteOrientationSensorData);
+        console.log("absoluteOrientationSensorData", absoluteOrientationSensorData);
         copyExperimentData[activityIndex].push({ timestamp: absoluteOrientationSensor.timestamp });
         setAbsoluteOrientationSensorData(copyExperimentData);
     }
@@ -119,6 +120,7 @@ function StartExperiment() {
             gyroscope?.start();
 
             //absoluteOrientationSensor setup
+            console.log("absoluteOrientationSensor setup activity start")
             absoluteOrientationSensor.addEventListener('reading', handleAbsoluteOrientationSensor);
             setTimeout(() => {
                 absoluteOrientationSensor.removeEventListener('reading', handleAbsoluteOrientationSensor);
@@ -169,6 +171,7 @@ function StartExperiment() {
                         setGyroscopeIndex(index);
                         break;
                     case 'AbsoluteOrientationSensor':
+                        console.log("setting up AbsoluteOrientationSensor");
                         setAbsoluteOrientationSensor(new AbsoluteOrientationSensor({ frequency: sensor.frequency }));
                         setAbsoluteOrientationSensorIndex(index);
                         break;
@@ -185,17 +188,22 @@ function StartExperiment() {
         if (experimentEnded) {
             let data = { data: [], touchData: [] }
             for (let activityIndex = 0; activityIndex < experiment.activities.length; activityIndex++) {
-                data.touchData.push([...touchStartData[activityIndex], ...touchMoveData[activityIndex], ...touchEndData[activityIndex]]);
+                let activityTouchData = [];
+                if (touchStartData) activityTouchData.push([...touchStartData[activityIndex]])
+                if (touchMoveData) activityTouchData.push([...touchMoveData[activityIndex]])
+                if (touchEndData) activityTouchData.push([...touchEndData[activityIndex]])
+
+                data.touchData.push([...activityTouchData]);
                 let sensorData = [];
                 for (let sensorIndex = 0; sensorIndex < experiment.sensors.length; sensorIndex++) {
-                    if (sensorIndex == accelerometerIndex) sensorData.push([...accelerometerData[activityIndex]]);
-                    if (sensorIndex == absoluteOrientationSensorIndex) sensorData.push([...absoluteOrientationSensorData[activityIndex]]);
-                    if (sensorIndex == gyroscopeIndex) sensorData.push([...gyroscopeData[activityIndex]]);
+                    if (sensorIndex == accelerometerIndex && accelerometerData) sensorData.push([...accelerometerData[activityIndex]]);
+                    if (sensorIndex == absoluteOrientationSensorIndex && absoluteOrientationSensorData) sensorData.push([...absoluteOrientationSensorData[activityIndex]]);
+                    if (sensorIndex == gyroscopeIndex && gyroscopeData) sensorData.push([...gyroscopeData[activityIndex]]);
                 }
                 data.data.push(sensorData);
             }
             setExperimentData({ ...experimentData, ...data });
-
+            console.log("experimentData", experimentData);
             dispatch(startInsertExperimentData(experimentData))
         }
     }, [experimentEnded]);

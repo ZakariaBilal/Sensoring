@@ -116,7 +116,7 @@ function ActivityUpdate() {
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button"
-                            size="large">Add Activity
+                            size="large">Update Activity
                         </Button>
                     </Form.Item>
                 </Form>}

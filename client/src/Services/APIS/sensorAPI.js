@@ -20,6 +20,7 @@ import { postRequest, getRequest, putRequest, deleteRequest } from 'app/axiosCli
 
 function* fetchSensors(action) {
     try {
+        yield put(getSensorSuccess(null));
         const response = yield call(() => getRequest('Sensor'));
         yield put(getSensorsSuccess(response.data));
     } catch (e) {
@@ -30,6 +31,7 @@ function* fetchSensors(action) {
 
 function* fetchSensor(action) {
     try {
+        yield put(getSensorsSuccess(null));
         const response = yield call(() => getRequest('Sensor/' + action.payload));
         yield put(getSensorSuccess(response.data));
     } catch (e) {

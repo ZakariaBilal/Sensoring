@@ -56,6 +56,36 @@ const routes = [
     element: lazy(() => import('features/CRUD/Experiment/ExperimentUpdate')),
     exact: true,
   },
+  {
+    path: '/dashboard/sensors',
+    element: lazy(() => import('features/CRUD/Sensor/SensorList')),
+    exact: true,
+  },
+  {
+    path: '/dashboard/sensors/insert',
+    element: lazy(() => import('features/CRUD/Sensor/SensorInsert')),
+    exact: true,
+  },
+  {
+    path: '/dashboard/sensors/update',
+    element: lazy(() => import('features/CRUD/Sensor/SensorUpdate')),
+    exact: true,
+  },
+  {
+    path: '/dashboard/activityTypes',
+    element: lazy(() => import('features/CRUD/ActivityType/ActivityTypeList')),
+    exact: true,
+  },
+  {
+    path: '/dashboard/activityTypes/insert',
+    element: lazy(() => import('features/CRUD/ActivityType/ActivityTypeInsert')),
+    exact: true,
+  },
+  {
+    path: '/dashboard/activityTypes/update',
+    element: lazy(() => import('features/CRUD/ActivityType/ActivityTypeUpdate')),
+    exact: true,
+  },
 ];
 
 export default routes;

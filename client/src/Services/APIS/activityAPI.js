@@ -20,6 +20,7 @@ import { postRequest, getRequest, putRequest, deleteRequest } from 'app/axiosCli
 
 function* fetchActivities(action) {
     try {
+        yield put(getActivitiesSuccess(null));
         const response = yield call(() => getRequest('Activity'));
         yield put(getActivitiesSuccess(response.data));
     } catch (e) {
@@ -30,6 +31,7 @@ function* fetchActivities(action) {
 
 function* fetchActivity(action) {
     try {
+        yield put(getActivitySuccess(null));
         const response = yield call(() => getRequest('Activity/' + action.payload));
         yield put(getActivitySuccess(response.data));
     } catch (e) {

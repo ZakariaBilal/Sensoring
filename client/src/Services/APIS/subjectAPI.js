@@ -20,6 +20,7 @@ import { postRequest, getRequest, putRequest, deleteRequest } from 'app/axiosCli
 
 function* fetchSubjects(action) {
     try {
+        yield put(getSubjectsSuccess(null));
         const response = yield call(() => getRequest('Subject'));
         yield put(getSubjectsSuccess(response.data));
     } catch (e) {
@@ -30,6 +31,7 @@ function* fetchSubjects(action) {
 
 function* fetchSubject(action) {
     try {
+        yield put(getSubjectSuccess(null));
         const response = yield call(() => getRequest('Subject/' + action.payload));
         yield put(getSubjectSuccess(response.data));
     } catch (e) {

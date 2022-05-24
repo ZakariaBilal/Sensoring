@@ -19,11 +19,12 @@ function ExperimentSelect() {
     return (
 
         <Row style={{ width: '75%' }} justify="space-between" align="middle" gutter={20}>
-            {experiments.map((experiment, index) => (
+
+            {experiments && experiments.map((experiment, index) => (
                 <Col span={12} key={index}>
                     <Link to={{ pathname: '/experimentStart' }}>
                         <Button block onClick={() => dispatch(startSetcurrentExperimentId(experiment._id))}>
-                            experiment {experiment.name}
+                            {experiment.name}
                         </Button>
                     </Link>
                 </Col>

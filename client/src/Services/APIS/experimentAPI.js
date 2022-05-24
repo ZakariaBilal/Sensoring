@@ -23,6 +23,7 @@ import { postRequest, getRequest, putRequest, deleteRequest } from 'app/axiosCli
 
 function* fetchExperiments(action) {
     try {
+        yield put(getExperimentsSuccess(null));
         const response = yield call(() => getRequest('experiment'));
         yield put(getExperimentsSuccess(response.data));
     } catch (e) {
@@ -33,6 +34,7 @@ function* fetchExperiments(action) {
 
 function* fetchExperiment(action) {
     try {
+        yield put(getExperimentSuccess(null));
         const response = yield call(() => getRequest('experiment/' + action.payload));
         yield put(getExperimentSuccess(response.data));
     } catch (e) {
