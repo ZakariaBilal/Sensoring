@@ -72,6 +72,9 @@ const SubjectSlice = createSlice({
             state.loader = false;
             state.error = true;
         },
+        clearSubject(state) {
+            state.subject = null;
+        }
     },
 });
 
@@ -89,6 +92,7 @@ export const { startGetSubjects,
     updateSubjectFailure,
     startDeleteSubject,
     deleteSubjectSuccess,
-    deleteSubjectFailure } = SubjectSlice.actions;
+    deleteSubjectFailure,
+    clearSubject } = SubjectSlice.actions;
 
 export default SubjectSlice.reducer;

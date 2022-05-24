@@ -22,7 +22,7 @@ let schema = new mongoose.Schema({
             screenX: Number,
             screenY: Number,
             force: Number,
-            timestamp: String,
+            timestamp: Number,
             type: String
         }]
 });

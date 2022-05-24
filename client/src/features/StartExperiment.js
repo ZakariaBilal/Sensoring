@@ -9,6 +9,7 @@ import {
 import {
     startInsertExperimentData
 } from '../Services/Slices/experimentDataSlice'
+import { clearSubject } from '../Services/Slices/subjectSlice'
 import { Accelerometer, Gyroscope, AbsoluteOrientationSensor } from 'motion-sensors-polyfill'
 import SubjectForm from "./OnBoarding/SubjectForm";
 import Timer from "./OnBoarding/Timer";
@@ -54,39 +55,44 @@ function StartExperiment() {
         return copyExperimentData
     }
     const handleTouchStart = (e) => {
-        let copyExperimentData = createDataObject(touchStartData);
-        copyExperimentData[activityIndex].push(e.changedTouches.map(touch => ({ ...touch, type: 'touchStart' })));
+        let copyExperimentData = touchStartData;
+        let { PageX, PageY, radiusX, radiusY, rotationAngle, screenX, screenY, force } = e.changedTouches.item(0)
+
+        copyExperimentData[activityIndex].push({ PageX, PageY, radiusX, radiusY, rotationAngle, screenX, screenY, force, timestamp: e.timeStamp, type: "touchstart" });
         setTouchStartData(copyExperimentData);
     }
 
     const handleTouchMove = (e) => {
-        let copyExperimentData = createDataObject(touchMoveData);
-        copyExperimentData[activityIndex].push(e.changedTouches.map(touch => ({ ...touch, type: 'touchMove' })));
+        let copyExperimentData = touchMoveData;
+        let { PageX, PageY, radiusX, radiusY, rotationAngle, screenX, screenY, force } = e.changedTouches.item(0)
+
+        copyExperimentData[activityIndex].push({ PageX, PageY, radiusX, radiusY, rotationAngle, screenX, screenY, force, timestamp: e.timeStamp, type: "touchmove" });
         setTouchMoveData(copyExperimentData);
     }
 
     const handleTouchEnd = (e) => {
-        let copyExperimentData = createDataObject(touchEndData);
-        copyExperimentData[activityIndex].push(e.changedTouches.map(touch => ({ ...touch, type: 'touchEnd' })));
+        let copyExperimentData = touchEndData;
+        let { PageX, PageY, radiusX, radiusY, rotationAngle, screenX, screenY, force } = e.changedTouches.item(0)
+
+        copyExperimentData[activityIndex].push({ PageX, PageY, radiusX, radiusY, rotationAngle, screenX, screenY, force, timestamp: e.timeStamp, type: "touchend" });
         setTouchEndData(copyExperimentData);
     }
 
     const handleAbsoluteOrientationSensor = (e) => {
-        let copyExperimentData = createDataObject(absoluteOrientationSensorData);
-        console.log("absoluteOrientationSensorData", absoluteOrientationSensorData);
-        copyExperimentData[activityIndex].push({ timestamp: absoluteOrientationSensor.timestamp });
+        let copyExperimentData = absoluteOrientationSensorData;
+        copyExperimentData[activityIndex].push({ ...absoluteOrientationSensor.quaternion, timestamp: absoluteOrientationSensor.timestamp });
         setAbsoluteOrientationSensorData(copyExperimentData);
     }
 
     const handleAccelerometer = (e) => {
-        let copyExperimentData = createDataObject(accelerometerData);
-        copyExperimentData[activityIndex].push({ timestamp: accelerometer.timestamp });
+        let copyExperimentData = accelerometerData;
+        copyExperimentData[activityIndex].push({ x: accelerometer.x, y: accelerometer.y, z: accelerometer.z, timestamp: accelerometer.timestamp });
         setAccelerometerData(copyExperimentData);
 
     }
     const handleGyroscope = (e) => {
-        let copyExperimentData = createDataObject(gyroscopeData);
-        copyExperimentData[activityIndex].push({ timestamp: gyroscope.timestamp });
+        let copyExperimentData = gyroscopeData;
+        copyExperimentData[activityIndex].push({ x: gyroscope.x, y: gyroscope.y, z: gyroscope.z, timestamp: gyroscope.timestamp });
         setGyroscopeData(copyExperimentData);
     }
 
@@ -120,7 +126,7 @@ function StartExperiment() {
             gyroscope?.start();
 
             //absoluteOrientationSensor setup
-            console.log("absoluteOrientationSensor setup activity start")
+            absoluteOrientationSensor?.start();
             absoluteOrientationSensor.addEventListener('reading', handleAbsoluteOrientationSensor);
             setTimeout(() => {
                 absoluteOrientationSensor.removeEventListener('reading', handleAbsoluteOrientationSensor);
@@ -146,10 +152,7 @@ function StartExperiment() {
             gyroscope?.stop();
             absoluteOrientationSensor?.stop();
             if (activityIndex == (experiment?.activities.length - 1)) {
-
                 setExperimentEnded(true);
-                console.log("experiment Ended");
-                console.log("absolute final data", absoluteOrientationSensorData)
             }
 
         }
@@ -159,21 +162,27 @@ function StartExperiment() {
     useEffect(() => {
         if (experiment?.sensors && currentExperimentId == experiment._id) {
             setExperimentData({ ...experimentData, experiment: experiment._id });
+            setTouchStartData(createDataObject(touchStartData));
+            setTouchMoveData(createDataObject(touchMoveData));
+            setTouchEndData(createDataObject(touchEndData));
 
             for (const [index, sensor] of experiment.sensors.entries()) {
                 switch (sensor.type) {
                     case 'Accelerometer':
                         setAccelerometer(new Accelerometer({ frequency: sensor.frequency }));
                         setAccelerometerIndex(index);
+                        setAccelerometerData(createDataObject(accelerometerData));
                         break;
                     case 'Gyroscope':
                         setGyroscope(new Gyroscope({ frequency: sensor.frequency }));
                         setGyroscopeIndex(index);
+                        setGyroscopeData(createDataObject(gyroscopeData));
                         break;
                     case 'AbsoluteOrientationSensor':
                         console.log("setting up AbsoluteOrientationSensor");
                         setAbsoluteOrientationSensor(new AbsoluteOrientationSensor({ frequency: sensor.frequency }));
                         setAbsoluteOrientationSensorIndex(index);
+                        setAbsoluteOrientationSensorData(createDataObject(absoluteOrientationSensorData));
                         break;
                     default:
                         console.error('unknown sensor')
@@ -188,12 +197,8 @@ function StartExperiment() {
         if (experimentEnded) {
             let data = { data: [], touchData: [] }
             for (let activityIndex = 0; activityIndex < experiment.activities.length; activityIndex++) {
-                let activityTouchData = [];
-                if (touchStartData) activityTouchData.push([...touchStartData[activityIndex]])
-                if (touchMoveData) activityTouchData.push([...touchMoveData[activityIndex]])
-                if (touchEndData) activityTouchData.push([...touchEndData[activityIndex]])
+                data.touchData.push([...touchStartData[activityIndex], ...touchMoveData[activityIndex], ...touchEndData[activityIndex]]);
 
-                data.touchData.push([...activityTouchData]);
                 let sensorData = [];
                 for (let sensorIndex = 0; sensorIndex < experiment.sensors.length; sensorIndex++) {
                     if (sensorIndex == accelerometerIndex && accelerometerData) sensorData.push([...accelerometerData[activityIndex]]);
@@ -203,8 +208,9 @@ function StartExperiment() {
                 data.data.push(sensorData);
             }
             setExperimentData({ ...experimentData, ...data });
-            console.log("experimentData", experimentData);
-            dispatch(startInsertExperimentData(experimentData))
+            console.log("experimentData", { ...experimentData, ...data });
+            dispatch(startInsertExperimentData({ ...experimentData, ...data }));
+            dispatch(clearSubject());
         }
     }, [experimentEnded]);
 
@@ -214,7 +220,7 @@ function StartExperiment() {
         <Row justify="space-evenly" align="middle" gutter={20}>
             <Col span={24} >
                 {(() => {
-                    if (!subject?._id) {
+                    if (!subject?._id && !experimentEnded) {
                         return <SubjectForm />
                     } else {
                         if (experimentEnded) {
