@@ -7,7 +7,7 @@ import { startGetExperiment, startUpdateExperiment } from '../../../Services/Sli
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 
 function ActivityUpdate() {
     const { Option } = Select;
@@ -16,7 +16,7 @@ function ActivityUpdate() {
     const sensors = useSelector(state => state.sensor.sensors);
     const experiment = useSelector(state => state.experiment.experiment);
     const location = useLocation();
-
+    const navigate = useNavigate();
     useEffect(() => {
         dispatch(startGetSensors());
         dispatch(startGetActivities());
@@ -31,7 +31,10 @@ function ActivityUpdate() {
                 initialValues={{
                     ...experiment
                 }}
-                onFinish={(values) => dispatch(startUpdateExperiment({ ...values, _id: experiment._id }))}
+                onFinish={(values) => {
+                    dispatch(startUpdateExperiment({ ...values, _id: experiment._id }))
+                    navigate('/dashboard/experiments')
+                }}
             >
                 <Form.Item
                     name="name"
@@ -96,6 +99,11 @@ function ActivityUpdate() {
                         size="large">Update Experiment
                     </Button>
                 </Form.Item>
+                <Link to='/dashboard'>
+                    <Button block>
+                        Back to Configure System
+                    </Button>
+                </Link>
             </Form>}
         </div>
     );

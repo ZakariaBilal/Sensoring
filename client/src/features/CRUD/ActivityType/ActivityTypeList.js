@@ -6,6 +6,7 @@ import { startGetActivityTypes, startDeleteActivityType } from '../../../Service
 import React, { useEffect, useState } from 'react';
 
 
+
 function ActivityTypeList() {
     const activityTypes = useSelector(state => state.activityType.activityTypes);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -67,7 +68,13 @@ function ActivityTypeList() {
             <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 <p>Please confirm the deletion of the activity</p>
             </Modal>
+            <Link to='/dashboard'>
+                <Button block>
+                    Back to Configure System
+                </Button>
+            </Link>
         </Row>
+
 
 
 

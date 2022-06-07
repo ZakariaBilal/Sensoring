@@ -6,13 +6,14 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function SensorUpdate() {
     const { Option } = Select;
     const dispatch = useDispatch();
-
     const activityType = useSelector(state => state.activityType.activityType);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(startGetActivityType(location.search.slice(1)));
@@ -30,7 +31,10 @@ function SensorUpdate() {
                     initialValues={{
                         ...activityType
                     }}
-                    onFinish={(values) => dispatch(startUpdateActivityType({ ...values, _id: activityType._id }))}
+                    onFinish={(values) => {
+                        dispatch(startUpdateActivityType({ ...values, _id: activityType._id }))
+                        navigate('/dashboard/activityTypes')
+                    }}
                 >
                     <Form.Item
                         name="name"
@@ -53,7 +57,13 @@ function SensorUpdate() {
                             size="large">Update ActivityType
                         </Button>
                     </Form.Item>
+                    <Link to='/dashboard'>
+                        <Button block>
+                            Back to Configure System
+                        </Button>
+                    </Link>
                 </Form>}
+
         </div>
     );
 }

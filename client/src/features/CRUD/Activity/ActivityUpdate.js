@@ -6,7 +6,7 @@ import { startGetActivityTypes } from '../../../Services/Slices/activityTypeSlic
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 
 function ActivityUpdate() {
     const { Option } = Select;
@@ -14,6 +14,7 @@ function ActivityUpdate() {
     const activityTypes = useSelector(state => state.activityType.activityTypes);
     const activity = useSelector(state => state.activity.activity);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(startGetActivity(location.search.slice(1)));
@@ -32,7 +33,10 @@ function ActivityUpdate() {
                     initialValues={{
                         ...activity
                     }}
-                    onFinish={(values) => dispatch(startUpdateActivity({ ...values, _id: activity._id }))}
+                    onFinish={(values) => {
+                        dispatch(startUpdateActivity({ ...values, _id: activity._id }))
+                        navigate('/dashboard/activities')
+                    }}
                 >
                     <Form.Item
                         name="name"
@@ -119,6 +123,11 @@ function ActivityUpdate() {
                             size="large">Update Activity
                         </Button>
                     </Form.Item>
+                    <Link to='/dashboard'>
+                        <Button block>
+                            Back to Configure System
+                        </Button>
+                    </Link>
                 </Form>}
         </div>
     );

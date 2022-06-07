@@ -1,13 +1,15 @@
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { Form, Input, Button, Checkbox, InputNumber, Select, Space, Row, Col } from 'antd';
+import { Form, Input, Button, InputNumber, Select, Row, Col } from 'antd';
 import { startInsertActivity } from '../../../Services/Slices/activitySlice';
 import { startGetActivityTypes } from '../../../Services/Slices/activityTypeSlice'
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 function ActivityInsert() {
+    const navigate = useNavigate();
     const { Option } = Select;
     const dispatch = useDispatch();
     const activityTypes = useSelector(state => state.activityType.activityTypes);
@@ -23,7 +25,10 @@ function ActivityInsert() {
                 name="activityInsert"
                 className="form"
                 // onFinish={(values) => { console.log(values); }}
-                onFinish={(values) => dispatch(startInsertActivity(values))}
+                onFinish={(values) => {
+                    dispatch(startInsertActivity(values))
+                    navigate('/dashboard/activities')
+                }}
             >
                 <Form.Item
                     name="name"
@@ -72,7 +77,7 @@ function ActivityInsert() {
                 >
                     <InputNumber size="large" style={{ width: "100%" }}
                         placeholder="Time Required"
-                        min={1}
+                        min={50}
                     />
                 </Form.Item>
 
@@ -100,6 +105,7 @@ function ActivityInsert() {
                                     Add Data
                                 </Button>
                             </Form.Item>
+
                         </>
                     )}
                 </Form.List>
@@ -110,6 +116,11 @@ function ActivityInsert() {
                         size="large">Add Activity
                     </Button>
                 </Form.Item>
+                <Link to='/dashboard'>
+                    <Button block>
+                        Back to Configure System
+                    </Button>
+                </Link>
             </Form>
         </div>
     );

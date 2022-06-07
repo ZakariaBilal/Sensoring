@@ -25,7 +25,13 @@ function Dashboard() {
             </Link>
           </Col>
         ))}
+        <Link to='/'>
+          <Button block>
+            Back to Home
+          </Button>
+        </Link>
       </Row>
+
 
 
 

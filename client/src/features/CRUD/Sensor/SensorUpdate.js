@@ -5,12 +5,12 @@ import { startUpdateSensor, startGetSensor } from '../../../Services/Slices/sens
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 
 function SensorUpdate() {
     const { Option } = Select;
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const sensor = useSelector(state => state.sensor.sensor);
     const location = useLocation();
 
@@ -30,7 +30,10 @@ function SensorUpdate() {
                     initialValues={{
                         ...sensor
                     }}
-                    onFinish={(values) => dispatch(startUpdateSensor({ ...values, _id: sensor._id }))}
+                    onFinish={(values) => {
+                        dispatch(startUpdateSensor({ ...values, _id: sensor._id }))
+                        navigate('/dashboard/sensors')
+                    }}
                 >
                     <Form.Item
                         name="name"
@@ -86,6 +89,11 @@ function SensorUpdate() {
                             size="large">Update Sensor
                         </Button>
                     </Form.Item>
+                    <Link to='/dashboard'>
+                        <Button block>
+                            Back to Configure System
+                        </Button>
+                    </Link>
                 </Form>}
         </div>
     );

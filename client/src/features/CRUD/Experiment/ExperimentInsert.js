@@ -6,13 +6,14 @@ import { startGetSensors } from '../../../Services/Slices/sensorSlice';
 import { startInsertExperiment } from '../../../Services/Slices/experimentSlice'
 import React, { useEffect, useState } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router-dom';
 
 function ExperimentInsert() {
     const { Option } = Select;
     const dispatch = useDispatch();
     const activities = useSelector(state => state.activity.activities);
     const sensors = useSelector(state => state.sensor.sensors);
-
+    const navigate = useNavigate();
     useEffect(() => {
         dispatch(startGetActivities());
         dispatch(startGetSensors());
@@ -24,7 +25,10 @@ function ExperimentInsert() {
             <Form
                 name="activityInsert"
                 className="form"
-                onFinish={(values) => dispatch(startInsertExperiment(values))}
+                onFinish={(values) => {
+                    dispatch(startInsertExperiment(values))
+                    navigate('/dashboard/experiments')
+                }}
             >
                 <Form.Item
                     name="name"
@@ -89,6 +93,11 @@ function ExperimentInsert() {
                         size="large">Add Experiment
                     </Button>
                 </Form.Item>
+                <Link to='/dashboard'>
+                    <Button block>
+                        Back to Configure System
+                    </Button>
+                </Link>
             </Form>
         </div>
     );

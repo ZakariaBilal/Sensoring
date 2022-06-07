@@ -77,6 +77,11 @@ function SensorList() {
             <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 <p>Please confirm the deletion of the activity</p>
             </Modal>
+            <Link to='/dashboard'>
+                <Button block>
+                    Back to Configure System
+                </Button>
+            </Link>
         </Row>
 
 

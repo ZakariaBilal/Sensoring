@@ -5,11 +5,12 @@ import { startInsertSensor } from '../../../Services/Slices/sensorSlice';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router-dom';
 
 function SensorInsert() {
     const { Option } = Select;
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
 
     return (
         <div className="container">
@@ -17,7 +18,10 @@ function SensorInsert() {
                 name="activityInsert"
                 className="form"
                 // onFinish={(values) => { console.log(values); }}
-                onFinish={(values) => dispatch(startInsertSensor(values))}
+                onFinish={(values) => {
+                    dispatch(startInsertSensor(values))
+                    navigate('/dashboard/sensors')
+                }}
             >
                 <Form.Item
                     name="name"
@@ -73,6 +77,11 @@ function SensorInsert() {
                         size="large">Add Sensor
                     </Button>
                 </Form.Item>
+                <Link to='/dashboard'>
+                    <Button block>
+                        Back to Configure System
+                    </Button>
+                </Link>
             </Form>
         </div>
     );
