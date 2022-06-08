@@ -111,27 +111,30 @@ function StartExperiment() {
         console.log("start Actvity", startActivity)
         if (startActivity) {
             //acceleromter setup
+            if(accelerometerIndex){
             accelerometer?.start();
-            accelerometer.addEventListener('reading', handleAccelerometer);
+            accelerometer?.addEventListener('reading', handleAccelerometer);
             setTimeout(() => {
-                accelerometer.removeEventListener('reading', handleAccelerometer);
+                accelerometer?.removeEventListener('reading', handleAccelerometer);
             }, experiment?.activities[activityIndex].timeRequired * 1000);
-
+            }
             //gyroscope setup
+            if(gyroscopeIndex){
             gyroscope?.start();
-            gyroscope.addEventListener('reading', handleGyroscope);
+            gyroscope?.addEventListener('reading', handleGyroscope);
             setTimeout(() => {
-                gyroscope.removeEventListener('reading', handleGyroscope);
+                gyroscope?.removeEventListener('reading', handleGyroscope);
             }, experiment?.activities[activityIndex].timeRequired * 1000);
             gyroscope?.start();
-
+            }
             //absoluteOrientationSensor setup
+            if(absoluteOrientationSensorIndex){
             absoluteOrientationSensor?.start();
-            absoluteOrientationSensor.addEventListener('reading', handleAbsoluteOrientationSensor);
+            absoluteOrientationSensor?.addEventListener('reading', handleAbsoluteOrientationSensor);
             setTimeout(() => {
-                absoluteOrientationSensor.removeEventListener('reading', handleAbsoluteOrientationSensor);
+                absoluteOrientationSensor?.removeEventListener('reading', handleAbsoluteOrientationSensor);
             }, experiment?.activities[activityIndex].timeRequired * 1000);
-
+            }
             //Touch setup
             document.addEventListener('touchstart', handleTouchStart);
             setTimeout(() => {
